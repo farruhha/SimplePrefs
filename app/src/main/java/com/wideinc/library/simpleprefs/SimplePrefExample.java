@@ -11,11 +11,7 @@ public class SimplePrefExample extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new SimplePrefs.Builder()
-                .setPrefsName("myapppreference")
-                .setContext(this)
-                .setMode(MODE_PRIVATE)
-                .setDefaultUse(false)
-                .build();
+        int myid = SimplePrefs.getInt("myid", 384);
+        String myusername = SimplePrefs.getString("username");
     }
 }
