@@ -1,10 +1,10 @@
 package com.wideinc.library.simpleprefs;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.content.SharedPreferences.Editor;
 
 import java.util.Map;
 
@@ -48,7 +48,7 @@ public final class SimplePrefs {
      * @return  a map that contains all the key value pairs saved in the preference
      * @see SharedPreferences#getAll()
      */
-    public Map<String,?> getAll(){
+    public static Map<String,?> getAll(){
         return getPreference().getAll();
     }
 
@@ -61,7 +61,7 @@ public final class SimplePrefs {
      * @see android.content.SharedPreferences#getInt(String, int);
      */
 
-    public int getInt(String key, int defValue){
+    public static int getInt(final String key, final int defValue){
         return getPreference().getInt(key,defValue);
     }
 
@@ -72,12 +72,233 @@ public final class SimplePrefs {
      * @throws ClassCastException if the key exists with this name but its value is not int
      * @see SharedPreferences#getInt(String, int)
      */
-    public int getInt(String key){
+    public static int getInt(final String key){
         return getPreference().getInt(key,0);
     }
 
-    
+    /**
+     * Retrieves a saved boolean value
+     * @param key key of preference to retrieve
+     * @param defValue value to return, if the key does not exist
+     * @return preference value if it exists or defValue if it does not.
+     * @throws ClassCastException if there is a preference with this name that is not a boolean.
+     * @see android.content.SharedPreferences#getBoolean(String, boolean)
+     */
+    public static boolean getBoolean(final String key, final boolean defValue){
+        return getPreference().getBoolean(key,defValue);
+    }
 
+    /** return the value of the preference if it exists, or return false;
+     *
+     * @param key name of the preference to return
+     * @return preference value if it exists or false it does not exist
+     * @throws ClassCastException if there is a preference with this name that is not a boolean.
+     * @see android.content.SharedPreferences#getBoolean(String, boolean)
+     */
+    public static boolean getBoolean(final String key){
+       return getPreference().getBoolean(key,false);
+    }
+
+    /**
+     * Retrieve saved long value if it exists or defValue
+     * @param key name of preference to retrieve
+     * @param defValue value if the preference does not exist
+     * @return preference value if it exist or defValue
+     * @throws ClassCastException if there is a preference with this name that is not a long.
+     * @see android.content.SharedPreferences#getLong(String, long)
+     */
+    public static long getLong(final String key, final int defValue){
+        return getPreference().getLong(key, defValue);
+    }
+
+    /**
+     * Retrieve saved long value if it exists or 0
+     * @param key name of preference to retrieve
+     * @return preference value if it exist or 0
+     * @throws ClassCastException if there is a preference with this name that is not a long.
+     * @see android.content.SharedPreferences#getLong(String, long)
+     */
+
+    public static long getLong(final String key){
+        return getPreference().getLong(key,0L);
+    }
+
+    /**
+     * returns the double that has been saved as long raw bits in long preference
+     * @param key name of preference to retrieve
+     * @param defValue value to return if the preference does not exist
+     * @return double value that has been saved as long raw bits or default if the preference does not exist
+     * @throws ClassCastException if there is a preference with this name that is not a long.
+     * @see android.content.SharedPreferences#getLong(String, long)
+     */
+    public static double getDouble(final String key, final double defValue){
+        return Double.longBitsToDouble(getPreference().getLong(key,Double.doubleToLongBits(defValue)));
+    }
+
+    /**
+     * Retrieve the double that has been saved as long raw bits in long preference
+     * return 0 if the preference does not exist
+     * @param key name of preference to retrieve
+     * @return double value that has been saved as long raw bits or default if the preference does not exist
+     * @throws ClassCastException if there is a preference with this name that is not a long.
+     * @see android.content.SharedPreferences#getLong(String, long)
+     */
+    public static double getDouble(final String key){
+        return Double.longBitsToDouble(getPreference().getLong(key,Double.doubleToLongBits(0.0d)));
+    }
+
+
+    /**
+     * Retrieve saved float value
+     * @param key name of the preference to retrieve
+     * @param defValue value to return if the preference does not exist
+     * @return returns preference value if it exists or defValue if it does not exists
+     * @throws ClassCastException if there is a preference with this name that is not a float.
+      * @see android.content.SharedPreferences#getFloat(String, float)
+     */
+    public static float getFloat(final String key, final float defValue){
+        return getPreference().getFloat(key, defValue);
+    }
+
+    /**
+     * Retrieve saved float value if it exists or 0
+     * @param key name of the preference to retrieve
+     * @return return preference value or 0 if it does not exist
+     * @throws ClassCastException if there is a preference with this name that is not a float.
+     * @see android.content.SharedPreferences#getFloat(String, float)
+     */
+    public static float getFloat(final String key){
+        return getPreference().getFloat(key,0.0f);
+    }
+
+    /**
+     * Retrieve the saved String value
+     * @param key name of the preference to retrieve
+     * @param defValue value to return if the preference does not exist
+     * @return saved String value or defValue if it does not exist;
+     * @throws ClassCastException if there is a preference with this name that is not a String.
+     * @see android.content.SharedPreferences#getString(String, String)
+     */
+    public static String getString(final String key, final String defValue){
+        return getPreference().getString(key,defValue);
+    }
+
+
+    /**
+     * Retrieve the saved String value
+     * @param key name of the preference to retrieve
+     * @return saved String value or emptyString if it does not exist;
+     * @throws ClassCastException if there is a preference with this name that is not a String.
+     * @see android.content.SharedPreferences#getString(String, String)
+     */
+    public static String getString(final String key){
+        return getPreference().getString(key,"");
+    }
+
+
+    /**
+     * Save long value for preference
+     * @param key name of preference to save or modify
+     * @param value new value of preference to save
+     * @see android.content.SharedPreferences.Editor#putLong(String, long)
+     */
+    public static void putLong(final String key, final long value){
+        final Editor editor = getPreference().edit();
+        editor.putLong(key,value);
+        editor.apply();
+    }
+    /**
+     * Save int value for preference
+     * @param key name of preference to save or modify
+     * @param value new value of preference to save
+     * @see android.content.SharedPreferences.Editor#putInt(String, int)
+     */
+
+    public static void putInt(final String key, final int value){
+        final Editor editor = getPreference().edit();
+        editor.putInt(key,value);
+        editor.apply();
+    }
+
+    /**
+     * Save long value as long raw bits value
+     * @param key name of preference to save or modify
+     * @param value new value of preference to save
+     * @see android.content.SharedPreferences.Editor#putLong(String, long)
+     */
+
+    public static void putDouble(final String key, final double value){
+        final Editor editor = getPreference().edit();
+        editor.putLong(key, Double.doubleToLongBits(value));
+        editor.apply();
+    }
+
+    /**
+     * Save float value for preference
+     * @param key name of preference to save or modify
+     * @param value new value of preference to save
+     * @see android.content.SharedPreferences.Editor#putFloat(String, float)
+     */
+    public static void putFloat(final String key, final float value){
+        final Editor editor = getPreference().edit();
+        editor.putFloat(key, value);
+        editor.apply();
+    }
+
+    /**
+     * Save string value for preference
+     * @param key name of preference to save or modify
+     * @param value new value of preference to save
+     * @see android.content.SharedPreferences.Editor#putString(String, String)
+     */
+    public static void putString(final String key, final String value){
+        final Editor editor = getPreference().edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    /**
+     * Save boolean value for preference
+     * @param key name of preference to save or modify
+     * @param value new value of preference to save
+     * @see android.content.SharedPreferences.Editor#putBoolean(String, boolean)
+     */
+    public static void putBoolean(final String key, final boolean value){
+        final Editor editor = getPreference().edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+
+    /**
+     * Check if a value is stored for the given key
+     * @param key name of the preference
+     * @return {@code true} if the preference exists or {@code false};
+     * @see android.content.SharedPreferences#contains(String)
+     */
+    public static boolean contains(final String key){
+        return getPreference().contains(key);
+    }
+
+
+    /**
+     * Removes all the saved key and value pairs from preference
+     * @return editor
+     * @see android.content.SharedPreferences.Editor#clear()
+     */
+    public static Editor clear(){
+        final Editor editor = getPreference().edit().clear();
+        editor.apply();
+        return editor;
+    }
+
+    /**
+     * Returns editor for underlying shared preference
+     * @return editor
+     */
+    public static Editor edit(){
+        return getPreference().edit();
+    }
 
 
 
