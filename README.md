@@ -67,39 +67,40 @@ Add it in your root build.gradle at the end of repositories:
 
 ```
 allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+repositories {
+    ...
+    maven { url 'https://jitpack.io' }
 	}
+}
 ```
 
 Then, add the dependency for gradle this way:
 
 ```
 dependencies {
-	        implementation 'com.github.farruhha:SimplePrefs:0.1.2'
-	}
+    implementation 'com.github.farruhha:SimplePrefs:0.1.2'
+ }
 ```
 
 Or for the maven, in the following way:
 
 ```
-repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+		 <url>https://jitpack.io</url>
+	</repository>
+</repositories>
 ```
 Add the dependency
 ```
 <dependency>
-	    <groupId>com.github.farruhha</groupId>
-	    <artifactId>SimplePrefs</artifactId>
-	    <version>0.1.2</version>
-	</dependency>
+    <groupId>com.github.farruhha</groupId>
+        <artifactId>SimplePrefs</artifactId>
+        <version>0.1.2</version>
+</dependency>
 ```
+For new updates on this library, you can constantly check here
 
 ```
 MIT License
