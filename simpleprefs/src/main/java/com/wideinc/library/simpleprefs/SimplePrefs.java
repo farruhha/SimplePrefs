@@ -1,12 +1,18 @@
 package com.wideinc.library.simpleprefs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public final class SimplePrefs {
 
+    private static final String DEFAULT_SUFFIX = "_simple_preferences";
+    private static final String LENGTH = "#LENGTH";
     private static SharedPreferences simplePreference;
 
     /**
@@ -25,12 +31,55 @@ public final class SimplePrefs {
         simplePreference = context.getSharedPreferences(prefsName, mode);
     }
 
+    /**
+     * instantiate basic SharedPreference class;
+     * @return instance of sharedPreference;
+     * @throws RuntimeException if simplePreference is not instantiated
+     */
+    @SuppressWarnings("WeakerAccess")
     public static SharedPreferences getPreference(){
         if (simplePreference != null){
             return simplePreference;
         }
         throw new RuntimeException("Simple Prefs instance not instantiated.Please call Builder().setContext().build() to instantiate SimplePrefs.");
     }
+
+    /**
+     * @return  a map that contains all the key value pairs saved in the preference
+     * @see SharedPreferences#getAll()
+     */
+    public Map<String,?> getAll(){
+        return getPreference().getAll();
+    }
+
+    /**
+     * Return int value for key from preference;
+     * @param key name of the preference to retrieve;
+     * @param defValue default value if the value does not exist;
+     * @return preference value if it exists or default value;
+     * @throws ClassCastException if the value exists but not int type
+     * @see android.content.SharedPreferences#getInt(String, int);
+     */
+
+    public int getInt(String key, int defValue){
+        return getPreference().getInt(key,defValue);
+    }
+
+    /**
+     * Retrieve the saved int value if the key exists or 0 if the key does not exist
+     * @param key the name of preference to retrieve
+     * @return retrieves the value of preference if it exists or 0
+     * @throws ClassCastException if the key exists with this name but its value is not int
+     * @see SharedPreferences#getInt(String, int)
+     */
+    public int getInt(String key){
+        return getPreference().getInt(key,0);
+    }
+
+    
+
+
+
 
 
     public static final class Builder{
@@ -78,6 +127,36 @@ public final class SimplePrefs {
             }else throw new RuntimeException("SharedPrefs mode can be set to ContextWrapper.MODE_PRIVATE, ContextWrapper.MODE_WORLD_READABLE, ContextWrapper.MODE_WRITABLE, ContextWrapper.MULTI-PROCESS");
             return this;
         }
-        
+
+        /**
+         * Set whether default shared preference name should be used for filename of preference file or user defined name should be used;
+         * @param isDefaultUsed if isDefaultUsed is true, default shared preference should be used usually
+         *                      a specific fragment or activity package name is used for default filename;
+         *
+         * @return the {@link com.wideinc.library.simpleprefs.SimplePrefs.Builder} object;
+         */
+        @SuppressWarnings("SameValueUsed")
+        public Builder setDefaultUse(boolean isDefaultUsed){
+            this.isDefaultUsed = isDefaultUsed;
+            return this;
+        }
+
+        /**
+         * Initialize the preference instance
+         * @throws RuntimeException if context is null or not set
+         */
+
+        public void build(){
+            if(context == null) throw new RuntimeException("Please, set the context before initializing");
+            if(TextUtils.isEmpty(prefsName)){
+                prefsName = context.getPackageName();
+            }
+            if (isDefaultUsed){
+                prefsName.concat(DEFAULT_SUFFIX);
+            }
+            SimplePrefs.init(context,prefsName,mode);
+        }
+
+
     }
 }
